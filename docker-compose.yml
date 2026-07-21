@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-ddecor}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ddecor}
+      POSTGRES_DB: ${POSTGRES_DB:-ddecor_id_studio}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-ddecor} -d ${POSTGRES_DB:-ddecor_id_studio}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATA_DIR: /data
+      DATABASE_URL: postgres://${POSTGRES_USER:-ddecor}:${POSTGRES_PASSWORD:-ddecor}@db:5432/${POSTGRES_DB:-ddecor_id_studio}
+      SESSION_SECRET: ${SESSION_SECRET}
+      SUPERADMIN_EMAIL: ${SUPERADMIN_EMAIL}
+      SUPERADMIN_PASSWORD: ${SUPERADMIN_PASSWORD}
+    volumes:
+      - uploads:/data
+    ports:
+      - '${APP_PORT:-4000}:4000'
+
+volumes:
+  pgdata:
+  uploads:
