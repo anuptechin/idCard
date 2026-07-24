@@ -1,0 +1,55 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-ddecor}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ddecor}
+      POSTGRES_DB: ${POSTGRES_DB:-ddecor_id_studio}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-ddecor} -d ${POSTGRES_DB:-ddecor_id_studio}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - internal
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATA_DIR: /data
+      DATABASE_URL: postgres://${POSTGRES_USER:-ddecor}:${POSTGRES_PASSWORD:-ddecor}@db:5432/${POSTGRES_DB:-ddecor_id_studio}
+      SESSION_SECRET: ${SESSION_SECRET}
+      SUPERADMIN_EMAIL: ${SUPERADMIN_EMAIL}
+      SUPERADMIN_PASSWORD: ${SUPERADMIN_PASSWORD}
+    volumes:
+      - uploads:/data
+    # No host port is published: the shared nginx-proxy reaches this
+    # container over the external proxy network via the alias `uid_app`.
+    networks:
+      internal: {}
+      proxy:
+        aliases:
+          - uid_app
+
+networks:
+  # Private network for app <-> db only.
+  internal:
+    driver: bridge
+  # The pre-existing shared network that the nginx-proxy container is on.
+  # Set PROXY_NETWORK in .env to its real name (see DEPLOY.md).
+  proxy:
+    external: true
+    name: ${PROXY_NETWORK:-nginx-proxy_default}
+
+volumes:
+  pgdata:
+  uploads:
