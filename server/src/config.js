@@ -28,7 +28,7 @@ export const MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
 export const MAX_IMAGE_DIM = 2000;
 
 // CORS dev origins (Vite)
-export const DEV_ORIGINS = ['http://localhost:5173', 'http://127.0.0.1:5173'];
+export const DEV_ORIGINS = ['http://localhost:5197', 'http://127.0.0.1:5197'];
 
 for (const dir of [DATA_DIR, UPLOADS_DIR]) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });

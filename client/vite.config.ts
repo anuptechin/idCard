@@ -5,12 +5,12 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 5173,
+    port: 5197,
     proxy: {
       '/api': {
         target: 'http://localhost:4000',
         changeOrigin: true,
-        cookieDomainRewrite: '', // make the session cookie apply to localhost:5173
+        cookieDomainRewrite: '', // make the session cookie apply to localhost:5197
       },
     },
   },
