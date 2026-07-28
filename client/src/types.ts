@@ -51,6 +51,8 @@ export interface CardData {
   name: string;
   designation: string;
   employeeCode: string;
+  emergencyContact?: string;
+  showEmergency?: boolean;
   addressLines: string[];
   tel: string;
   fax: string;

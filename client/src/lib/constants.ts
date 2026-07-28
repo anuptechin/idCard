@@ -15,6 +15,7 @@ export const LAYOUT = {
   name: { cx: CARD.w / 2, baseline: 142.6, size: 14, min: 9, maxW: 138 },
   desig: { cx: CARD.w / 2, baseline: 150.4, size: 5.5, min: 4, maxW: 146 },
   emp: { cx: CARD.w / 2, baseline: 156.8, size: 5.5, label: 'Employee Code: ' },
+  emergency: { cx: CARD.w / 2, baseline: 163.2, size: 5.5, label: 'Emergency Contact: ' },
   addr: { cx: CARD.w / 2, base0: 208.6, gap: 6.45, size: 5.5, maxW: 150 },
   contact: { cx: CARD.w / 2, baseline: 230.6, size: 5.5 },
 };
@@ -74,6 +75,8 @@ export function newCardData(): CardData {
     name: '',
     designation: '',
     employeeCode: '',
+    emergencyContact: '',
+    showEmergency: false,
     addressLines: a.lines.slice(),
     tel: a.tel,
     fax: a.fax,

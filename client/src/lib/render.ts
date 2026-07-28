@@ -76,6 +76,8 @@ export function renderCard(ctx: CanvasRenderingContext2D, scale: number, input: 
     name: src.name ?? '',
     designation: src.designation ?? '',
     employeeCode: src.employeeCode ?? '',
+    emergencyContact: src.emergencyContact ?? '',
+    showEmergency: !!src.showEmergency,
     addressLines: Array.isArray(src.addressLines) ? src.addressLines : [],
     tel: src.tel ?? '',
     fax: src.fax ?? '',
@@ -152,6 +154,12 @@ export function renderCard(ctx: CanvasRenderingContext2D, scale: number, input: 
   /* ---------- EMPLOYEE CODE ---------- */
   ctx.font = `${P(LAYOUT.emp.size).toFixed(2)}px BarlowR`;
   ctx.fillText(LAYOUT.emp.label + data.employeeCode, P(CX), P(LAYOUT.emp.baseline));
+
+  /* ---------- EMERGENCY CONTACT (optional, toggled) ---------- */
+  if (data.showEmergency) {
+    ctx.font = `${P(LAYOUT.emergency.size).toFixed(2)}px BarlowR`;
+    ctx.fillText(LAYOUT.emergency.label + (data.emergencyContact || ''), P(CX), P(LAYOUT.emergency.baseline));
+  }
 
   /* ---------- LOGO (built-in brand or custom uploaded logo) ---------- */
   const brand = BRANDS.find((b) => b.key === data.brand);

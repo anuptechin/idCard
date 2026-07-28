@@ -38,6 +38,25 @@ export function DetailsForm({ data }: { data: CardData }) {
           onChange={(e) => patchData({ employeeCode: e.target.value })}
         />
       </div>
+
+      <div className="field">
+        <label className="chk" style={{ marginBottom: data.showEmergency ? 8 : 0 }}>
+          <input
+            type="checkbox"
+            checked={!!data.showEmergency}
+            onChange={(e) => patchData({ showEmergency: e.target.checked })}
+          />
+          Include emergency contact on the card
+        </label>
+        {data.showEmergency && (
+          <input
+            className="control"
+            value={data.emergencyContact ?? ''}
+            placeholder="e.g. +91 90000 00000"
+            onChange={(e) => patchData({ emergencyContact: e.target.value })}
+          />
+        )}
+      </div>
     </div>
   );
 }
